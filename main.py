@@ -3,15 +3,18 @@ import os
 import random
 from pathlib import Path
 from PySide6.QtWidgets import QApplication, QMainWindow, QLabel
-from PySide6.QtCore import Qt, QTimer, QRect, QPoint, QPropertyAnimation, QEasingCurve
-from PySide6.QtGui import QMovie, QCursor, QPixmap
-
+from PySide6.QtCore import Qt, QTimer, QRect, QPoint, QPropertyAnimation, QEasingCurve, QSize
+from PySide6.QtGui import  QMovie, QCursor, QPixmap, QTransform
 class DesktopPet(QMainWindow):
     def __init__(self):
         super().__init__()
+    
         
         # Scale factor
         self.scale_factor = 4
+        self.base_size = QSize(100, 100)  # or get this from a sample frame
+        self.scaled_size = self.base_size * self.scale_factor
+        self.resize(self.scaled_size)
         
         # States
         self.IDLE = 0
@@ -96,6 +99,12 @@ class DesktopPet(QMainWindow):
     
     def scale_frame(self):
         current_pixmap = self.movie.currentPixmap()
+        
+        if self.direction < 0:
+            # Flip the pixmap horizontally
+            transform = QTransform().scale(-1, 1)
+            current_pixmap = current_pixmap.transformed(transform, Qt.SmoothTransformation)
+        
         scaled_pixmap = current_pixmap.scaled(
             current_pixmap.width() * self.scale_factor,
             current_pixmap.height() * self.scale_factor,
@@ -112,6 +121,7 @@ class DesktopPet(QMainWindow):
         if self.current_state == self.WALKING:
             pos = self.pos()
             new_x = pos.x() + (self.speed * self.direction)
+        
             
             # Check screen boundaries
             desktop = QApplication.primaryScreen().availableGeometry()
@@ -123,12 +133,6 @@ class DesktopPet(QMainWindow):
                 new_x = desktop.width() - self.width()
             
             # Flip animation horizontally based on direction
-            if self.direction < 0:
-                self.pet_label.setScaledContents(True)
-                self.pet_label.setGeometry(QRect(self.width(), 0, -self.width(), self.height()))
-            else:
-                self.pet_label.setScaledContents(True)
-                self.pet_label.setGeometry(QRect(0, 0, self.width(), self.height()))
                 
             self.move(new_x, pos.y())
         
