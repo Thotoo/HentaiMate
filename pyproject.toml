@@ -1,0 +1,18 @@
+[project]
+name = "hentaimate"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Thotoo", email = "Thobias.blankespoor@gmail.com"}
+]
+requires-python = ">=3.9,<3.14"  # PySide6 requires Python >=3.9 and <3.14
+dependencies = [
+    "pyside6 (>=6.0.0,<7.0.0)"
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode = false
