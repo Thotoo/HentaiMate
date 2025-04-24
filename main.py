@@ -72,6 +72,9 @@ class DesktopPet(QMainWindow):
         # Position on taskbar
         self.move_to_taskbar()
         self.show()
+
+    def closeEvent(self, event):
+        event.ignore()
     
     def move_to_taskbar(self):
         desktop = QApplication.primaryScreen().availableGeometry()
